@@ -14,7 +14,7 @@ class AppSettings {
   final String defaultLanguage;
 
   @HiveField(3)
-  final String ttsProvider; // 'device', 'openai', 'googleCloud'
+  final String ttsProvider; // 'device', 'googleAi'
 
   AppSettings({
     this.deleteAudioAfterTranscription = false,

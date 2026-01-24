@@ -4,11 +4,13 @@ import 'package:record/record.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
+import 'background_recording_service.dart';
 
 part 'audio_recorder_service.g.dart';
 
 class AudioRecorderService {
   final AudioRecorder _audioRecorder = AudioRecorder();
+  bool _isBackgroundRecording = false;
 
   Future<bool> hasPermission() async {
     return await _audioRecorder.hasPermission();
@@ -28,6 +30,17 @@ class AudioRecorderService {
       throw Exception('Microphone permission not granted. Please enable it in Settings.');
     }
 
+    // Initialize and start background recording service
+    await BackgroundRecordingService.initialize();
+    await BackgroundRecordingService.requestNotificationPermission();
+
+    final serviceStarted = await BackgroundRecordingService.startService();
+    if (!serviceStarted && Platform.isAndroid) {
+      throw Exception('Failed to start background recording service.');
+    }
+
+    _isBackgroundRecording = true;
+
     final dir = await getApplicationDocumentsDirectory();
     final fileName = 'recording_${const Uuid().v4()}.m4a';
     final path = '${dir.path}/$fileName';
@@ -44,18 +57,47 @@ class AudioRecorderService {
   }
 
   Future<String?> stopRecording() async {
-    return await _audioRecorder.stop();
+    final path = await _audioRecorder.stop();
+
+    // Stop background recording service
+    if (_isBackgroundRecording) {
+      await BackgroundRecordingService.stopService();
+      _isBackgroundRecording = false;
+    }
+
+    return path;
   }
 
   Future<void> pauseRecording() async {
     await _audioRecorder.pause();
+
+    // Update notification when paused
+    if (_isBackgroundRecording && Platform.isAndroid) {
+      await BackgroundRecordingService.updateNotification(
+        title: 'Recording paused',
+        text: 'Tap to resume',
+      );
+    }
   }
 
   Future<void> resumeRecording() async {
     await _audioRecorder.resume();
+
+    // Update notification when resumed
+    if (_isBackgroundRecording && Platform.isAndroid) {
+      await BackgroundRecordingService.updateNotification(
+        title: 'Recording in progress',
+        text: 'Tap to return to the app',
+      );
+    }
   }
 
   Future<void> dispose() async {
+    // Ensure background service is stopped on disposal
+    if (_isBackgroundRecording) {
+      await BackgroundRecordingService.stopService();
+      _isBackgroundRecording = false;
+    }
     _audioRecorder.dispose();
   }
 

@@ -43,17 +43,6 @@ class _WaveVisualizationState extends State<WaveVisualization>
     return Container(
       height: 200,
       width: double.infinity,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            widget.primaryColor.withOpacity(0.1),
-            widget.secondaryColor.withOpacity(0.05),
-          ],
-        ),
-        borderRadius: BorderRadius.circular(20),
-      ),
       child: widget.isActive
           ? AnimatedBuilder(
               animation: _controller,

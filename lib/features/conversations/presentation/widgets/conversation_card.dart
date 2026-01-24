@@ -24,26 +24,26 @@ class ConversationCard extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            const Color(0xFF1E293B),
-            const Color(0xFF1E293B).withValues(alpha: 0.8),
-          ],
-        ),
-        borderRadius: BorderRadius.circular(16),
+        color: Theme.of(context).cardTheme.color,
+        borderRadius: BorderRadius.circular(24),
         border: Border.all(
           color: isMeeting
-              ? const Color(0xFF6366F1).withValues(alpha: 0.3)
-              : const Color(0xFF10B981).withValues(alpha: 0.3),
-          width: 1,
+              ? const Color(0xFF8A2BE2).withValues(alpha: 0.1)
+              : const Color(0xFF007AFF).withValues(alpha: 0.1),
+          width: 0.5,
         ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.03),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(24),
           onTap: onTap,
           onLongPress: onLongPress,
           child: Padding(
@@ -60,8 +60,8 @@ class ConversationCard extends StatelessWidget {
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                       colors: isMeeting
-                          ? [const Color(0xFF6366F1), const Color(0xFF8B5CF6)]
-                          : [const Color(0xFF10B981), const Color(0xFF059669)],
+                          ? [const Color(0xFF8A2BE2), const Color(0xFF4169E1)]
+                          : [const Color(0xFF007AFF), const Color(0xFF00C6FF)],
                     ),
                   ),
                   child: Icon(
@@ -71,7 +71,6 @@ class ConversationCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 16),
-
                 // Content
                 Expanded(
                   child: Column(
@@ -94,10 +93,10 @@ class ConversationCard extends StatelessWidget {
                               conversation.title,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16,
-                                color: Color(0xFFF8FAFC), // slate-50
+                                color: Theme.of(context).colorScheme.onSurface,
                               ),
                             ),
                           ),
@@ -110,53 +109,60 @@ class ConversationCard extends StatelessWidget {
                             ),
                             decoration: BoxDecoration(
                               color: isMeeting
-                                  ? const Color(0xFF6366F1).withValues(alpha: 0.2)
-                                  : const Color(0xFF10B981).withValues(alpha: 0.2),
-                              borderRadius: BorderRadius.circular(8),
+                                  ? const Color(
+                                      0xFF8A2BE2,
+                                    ).withValues(alpha: 0.1)
+                                  : const Color(
+                                      0xFF007AFF,
+                                    ).withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(12),
                             ),
                             child: Text(
                               isMeeting ? 'Meeting' : 'Note',
                               style: TextStyle(
                                 fontSize: 10,
-                                fontWeight: FontWeight.w600,
+                                fontWeight: FontWeight.w700,
                                 color: isMeeting
-                                    ? const Color(0xFF6366F1)
-                                    : const Color(0xFF10B981),
+                                    ? const Color(0xFF8A2BE2)
+                                    : const Color(0xFF007AFF),
                               ),
                             ),
                           ),
                         ],
                       ),
-
                       if (conversation.subtitle != null) ...[
                         const SizedBox(height: 6),
                         Text(
                           conversation.subtitle!,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 14,
-                            color: Color(0xFFCBD5E1), // slate-300
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.onSurface.withValues(alpha: 0.7),
                           ),
                         ),
                       ],
-
                       const SizedBox(height: 6),
                       Text(
                         dateFormat.format(conversation.createdAt),
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 12,
-                          color: Color(0xFF64748B), // slate-500
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.onSurface.withValues(alpha: 0.4),
                         ),
                       ),
                     ],
                   ),
                 ),
-
                 // Delete button
                 IconButton(
-                  icon: const Icon(Icons.delete_outline),
-                  color: const Color(0xFF64748B),
+                  icon: const Icon(Icons.delete_outline, size: 20),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withValues(alpha: 0.3),
                   onPressed: onDelete,
                 ),
               ],

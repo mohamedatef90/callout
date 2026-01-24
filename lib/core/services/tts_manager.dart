@@ -2,8 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'tts_providers/tts_provider_interface.dart';
 import 'tts_providers/device_tts_provider.dart';
-import 'tts_providers/openai_tts_provider.dart';
-import 'tts_providers/google_cloud_tts_provider.dart';
+import 'tts_providers/google_ai_tts_provider.dart';
 import '../constants/api_keys.dart';
 
 part 'tts_manager.g.dart';
@@ -43,26 +42,15 @@ class TtsManager extends ChangeNotifier {
       case TtsProviderType.device:
         _currentProvider = DeviceTtsProvider();
         break;
-      case TtsProviderType.openai:
-        final apiKey = ApiKeys.openaiApiKey;
-        if (apiKey == null || apiKey.isEmpty) {
-          debugPrint('TtsManager: OpenAI API key not set in .env, falling back to device');
+      case TtsProviderType.googleAi:
+        final apiKey = ApiKeys.googleApiKey;
+        if (apiKey.isEmpty) {
+          debugPrint('TtsManager: Google AI API key not set in .env, falling back to device');
           _currentProvider = DeviceTtsProvider();
           _currentProviderType = TtsProviderType.device;
         } else {
-          debugPrint('TtsManager: Using OpenAI API key from .env');
-          _currentProvider = OpenAiTtsProvider(apiKey: apiKey);
-        }
-        break;
-      case TtsProviderType.googleCloud:
-        final apiKey = ApiKeys.googleCloudApiKey;
-        if (apiKey == null || apiKey.isEmpty) {
-          debugPrint('TtsManager: Google Cloud API key not set in .env, falling back to device');
-          _currentProvider = DeviceTtsProvider();
-          _currentProviderType = TtsProviderType.device;
-        } else {
-          debugPrint('TtsManager: Using Google Cloud API key from .env');
-          _currentProvider = GoogleCloudTtsProvider(apiKey: apiKey);
+          debugPrint('TtsManager: Using Google AI API key from .env');
+          _currentProvider = GoogleAiTtsProvider(apiKey: apiKey);
         }
         break;
     }

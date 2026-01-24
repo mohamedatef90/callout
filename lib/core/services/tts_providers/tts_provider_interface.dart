@@ -2,9 +2,8 @@ import 'package:flutter/foundation.dart';
 
 /// TTS provider types
 enum TtsProviderType {
-  device,      // Free - uses flutter_tts
-  openai,      // OpenAI TTS API
-  googleCloud, // Google Cloud TTS API
+  device,    // Free - uses flutter_tts
+  googleAi,  // Google AI (Gemini) TTS API
 }
 
 /// TTS playback state

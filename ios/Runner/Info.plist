@@ -30,6 +30,11 @@
 	<string>Main</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>We need access to your microphone to record meetings and memos.</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>audio</string>
+		<string>processing</string>
+	</array>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
