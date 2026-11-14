@@ -8,7 +8,9 @@ A Flutter voice-recording app with AI-powered transcription and meeting summarie
 - Voice recording and audio playback
 - Background recording on Android and iOS
 - AI-assisted transcription and summarization
-- Local conversation storage
+- Local conversation storage (Hive)
+- Conversation reminders and device calendar integration
+- Text-to-speech playback (device voice or Gemini) and sharing of conversation content
 - Recording-state notifications and lifecycle handling
 - Mobile-first interaction and branding
 
@@ -29,10 +31,19 @@ Callout uses an Android foreground service and iOS background-audio mode so reco
 
 ```bash
 flutter pub get
+cp .env.example .env     # then set GOOGLE_API_KEY
 flutter run
 ```
 
-Create a local `.env` file for required development configuration. Do not commit credentials or production API keys.
+`.env` is loaded at startup and is declared as an asset in `pubspec.yaml`, so the file must exist for the app to build and run. Do not commit credentials or production API keys.
+
+### Environment variables
+
+Set in `.env` (name only; also listed in `.env.example`):
+
+- `GOOGLE_API_KEY`: Gemini API key, used for transcription and summaries (model `gemini-2.5-flash`) and for Gemini text-to-speech.
+
+`lib/core/constants/api_keys.dart` also defines optional `OPENAI_API_KEY` and `GOOGLE_CLOUD_API_KEY` getters, but no other code reads them.
 
 ## Quality checks
 
